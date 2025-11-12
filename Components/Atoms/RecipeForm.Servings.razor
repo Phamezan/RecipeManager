@@ -1,0 +1,10 @@
+﻿<div class="mb-3">
+    <label for="servings" class="form-label">Number of Servings</label>
+    <InputNumber id="servings" class="form-control" @bind-Value="@Servings" />
+</div>
+
+@code {
+    [Parameter]
+    public int Servings { get; set; }
+
+}

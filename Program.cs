@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 using RecipeManager.Components;
 using RecipeManager.Data;
+using RecipeManager.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +9,10 @@ builder.Services.AddDbContext<RecipeContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddTransient<IRecipeRepository, RecipeRepository>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 // Add services to the container.
-builder.Services.AddRazorComponents();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 var app = builder.Build();
 
@@ -24,9 +26,11 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-app.MapRazorComponents<App>();
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 app.Run();

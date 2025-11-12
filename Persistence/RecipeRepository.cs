@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using RecipeManager.Data;
 using RecipeManager.Models;
 
-namespace Persistence
+namespace RecipeManager.Persistence
 {
     public class RecipeRepository : IRecipeRepository
     {
@@ -32,17 +33,22 @@ namespace Persistence
 
         public List<Recipe> GetAllRecipes()
         {
-            return _context.Recipes.ToList();
+            return _context.Recipes.Include(r => r.Category).ToList();
         }
 
         public Recipe GetRecipeById(int id)
         {
-            return _context.Recipes.Find(id);
+            return _context.Recipes.Include(r => r.Category).FirstOrDefault(r => r.RecipeId == id)!;
         }
 
         public void UpdateRecipe(Recipe recipe)
         {
-            _context.Recipes.Update(recipe);
+            var recipeToUpdate = _context.Recipes.Find(recipe.RecipeId);
+            if (recipeToUpdate == null)
+            {
+                throw new ArgumentException("Recipe not found");
+            }
+            _context.Recipes.Update(recipeToUpdate);
             _context.SaveChanges();
         }
     }

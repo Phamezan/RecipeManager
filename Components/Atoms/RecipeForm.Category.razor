@@ -1,0 +1,20 @@
+﻿<div class="mb-3">
+    <label for="category" class="form-label">Recipe Category</label>
+    <InputSelect id="category" class="form-select" @bind-Value="@CategoryId">
+        @if (Categories != null)
+        {
+            <option value="">Select a category</option>
+            @foreach (var category in @Categories)
+            {
+                <option value="@category.CategoryId">@category.Name</option>
+            }
+        }
+    </InputSelect>
+</div>
+
+@code {
+    [Parameter]
+    public List<Category>? Categories { get; set; }
+    [Parameter]
+    public int? CategoryId { get; set; }
+}

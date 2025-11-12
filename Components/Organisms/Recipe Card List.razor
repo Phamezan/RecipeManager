@@ -1,18 +1,26 @@
-﻿@using Persistence
+﻿@inject IRecipeRepository repo
 
-@inject IRecipeRepository repo
-
-@foreach (var recipe in recipes)
+@if (recipes != null)
 {
-    <Recipe_Card RecipeId="@recipe.RecipeId" ImageUrl="@recipe.FilePath" RecipeTitle="@recipe.Name"
-        RecipeDescription="@recipe.Description" PrepTime="@recipe.PrepTime" />
+
+    <div class="row">
+        @foreach (var recipe in recipes)
+        {
+            <div class="col-md-3 mb-3">
+                <Recipe_Card RecipeId="@recipe.RecipeId" ImageUrl="@recipe.FilePath" RecipeTitle="@recipe.Name"
+                    RecipeDescription="@recipe.Description" PrepTime="@recipe.PrepTime" />
+            </div>
+        }
+    </div>
 }
 
 @code {
-    private IEnumerable<Recipe> recipes;
+    private List<Recipe>? recipes;
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
         recipes = repo.GetAllRecipes();
+
+        base.OnParametersSet();
     }
 }

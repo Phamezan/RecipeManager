@@ -1,0 +1,10 @@
+﻿<div class="mb-3">
+    <label for="ingredients" class="form-label">Ingredients</label>
+    <InputTextArea id="ingredients" class="form-control" rows="5" @bind-Value="@Ingredients" />
+</div>
+
+@code {
+    [Parameter]
+    public string Ingredients { get; set; } = string.Empty;
+
+}

@@ -1,0 +1,9 @@
+﻿<div class="mb-3">
+    <label for="prepTime" class="form-label">Preparation Time </label>
+    <InputText id="prepTime" class="form-control" @bind-Value="@PrepTime" />
+</div>
+
+@code {
+    [Parameter]
+    public string PrepTime { get; set; } = string.Empty;
+}

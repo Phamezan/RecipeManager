@@ -1,11 +1,18 @@
-﻿<div class="card" style="width: 18rem;">
-    <Recipe_Card_Image ImageUrl="@ImageUrl" />
+﻿<div class="card w-100 h-100">
+    <div class="card-img-top">
+        <Recipe_Card_Image ImageUrl="@ImageUrl" />
+    </div>
+
     <div class="card-body">
         <Recipe_Card_Header RecipeTitle="@RecipeTitle" />
         <Recipe_Card_Description Description="@RecipeDescription" />
+    </div>
+
+    <div class="card-footer">
         <Recipe_Card_Footer PrepTime="@PrepTime" RecipeId="@RecipeId" />
     </div>
 </div>
+
 
 @code {
     [Parameter]

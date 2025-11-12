@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using RecipeManager.Models;
 
-namespace Persistence
+namespace RecipeManager.Persistence
 {
     public interface IRecipeRepository
     {

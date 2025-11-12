@@ -8,7 +8,6 @@ public class Recipe
     public int RecipeId { get; set; }
     [Required]
     public string Name { get; set; } = string.Empty;
-    public Category? Category { get; set; }
     [Required]
     public string PrepTime { get; set; } = string.Empty;
     public int Servings { get; set; }
@@ -18,4 +17,6 @@ public class Recipe
     public string Ingredients { get; set; } = string.Empty;
     [Required]
     public string Instructions { get; set; } = string.Empty;
+    public int CategoryId { get; set; }
+    public Category? Category { get; set; } = default;
 }

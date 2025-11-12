@@ -1,0 +1,160 @@
+﻿@page "/recipes-new"
+@page "/recipes-edit/{RecipeId:int}"
+@rendermode InteractiveServer
+@inject NavigationManager manager
+@inject IRecipeRepository recipeRepo
+@inject ICategoryRepository categoryRepo
+@inject IWebHostEnvironment WebHostEnv
+
+@if (recipe != null)
+{
+    <EditForm Model="recipe" enctype="multipart/form-data" FormName="EditRecipe" OnValidSubmit="Submit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="row">
+            <div class="col-md-6">
+                <RecipeForm_Name recipeName="@recipe.Name" />
+            </div>
+            <div class="col-md-6">
+                <RecipeForm_Description Description="@recipe.Description" />
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <RecipeForm_Category Categories="@categories" CategoryId="@recipe.CategoryId" />
+            </div>
+            <div class="col-md-6">
+                <RecipeForm_Instructions Instructions="@recipe.Instructions" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="d-flex gap-3">
+                    <RecipeForm_PrepTime prepTime="@recipe.PrepTime" />
+                    <RecipeForm_Servings servings="@recipe.Servings" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <RecipeForm_Ingredients Ingredients="@recipe.Ingredients" />
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <RecipeForm_Image />
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-start gap-3 mt-4">
+            <a type="button" href="/recipes" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary" @onclick="Submit">Save Recipe</button>
+        </div>
+    </EditForm>
+}
+else if (newRecipe != null)
+{
+    <EditForm Model="newRecipe" FormName="AddRecipe">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="row">
+            <div class="col-md-6">
+                <RecipeForm_Name recipeName="@newRecipe.Name" />
+            </div>
+            <div class="col-md-6">
+                <RecipeForm_Description Description="@newRecipe.Description" />
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <RecipeForm_Category Categories="@categories" />
+            </div>
+            <div class="col-md-6">
+                <RecipeForm_Instructions Instructions="@newRecipe.Instructions" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="d-flex gap-3">
+                    <RecipeForm_PrepTime prepTime="@newRecipe.PrepTime" />
+                    <RecipeForm_Servings servings="@newRecipe.Servings" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <RecipeForm_Ingredients Ingredients="@newRecipe.Ingredients" />
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <RecipeForm_Image />
+            </div>
+        </div>
+
+
+        <div class="d-flex justify-content-start gap-3 mt-4">
+            <a type="button" href="/recipes" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary" @onclick="Submit">Add Recipe</button>
+        </div>
+    </EditForm>
+}
+else
+{
+    <p>Loading...</p>
+}
+
+
+@code {
+    [SupplyParameterFromForm(FormName = "EditRecipe")]
+    private Recipe? recipe { get; set; }
+    [SupplyParameterFromForm(FormName = "AddRecipe")]
+    private Recipe? newRecipe { get; set; } = new Recipe();
+
+    [Parameter]
+    public int? RecipeId { get; set; }
+
+    private List<Category>? categories;
+
+    protected override void OnParametersSet()
+    {
+        recipe ??= recipeRepo.GetRecipeById(RecipeId ?? 0);
+        categories = categoryRepo.GetAllCategories();
+    }
+
+    //ImageUpload
+    private IBrowserFile file;
+
+    private void HandleFile(IBrowserFile selectedFile)
+    {
+        file = selectedFile;
+    }
+
+    private async Task Submit()
+    {
+        if (file != null)
+        {
+            var folderPath = Path.Combine(WebHostEnv.WebRootPath, "uploads");
+            Directory.CreateDirectory(folderPath);
+
+            var filePath = Path.Combine(folderPath, file.Name);
+            using var stream = file.OpenReadStream(maxAllowedSize: 10_000_000);
+            using var fs = new FileStream(filePath, FileMode.Create);
+            await stream.CopyToAsync(fs);
+        }
+        if (recipe != null)
+        {
+            recipeRepo.UpdateRecipe(recipe);
+        }
+        else if (newRecipe != null)
+        {
+            recipeRepo.AddRecipe(newRecipe);
+        }
+        manager.NavigateTo("/recipes");
+    }
+
+}
