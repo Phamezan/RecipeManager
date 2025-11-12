@@ -1,0 +1,18 @@
+﻿@using Persistence
+
+@inject IRecipeRepository repo
+
+@foreach (var recipe in recipes)
+{
+    <Recipe_Card RecipeId="@recipe.RecipeId" ImageUrl="@recipe.FilePath" RecipeTitle="@recipe.Name"
+        RecipeDescription="@recipe.Description" PrepTime="@recipe.PrepTime" />
+}
+
+@code {
+    private IEnumerable<Recipe> recipes;
+
+    protected override void OnInitialized()
+    {
+        recipes = repo.GetAllRecipes();
+    }
+}
