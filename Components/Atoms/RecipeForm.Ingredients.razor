@@ -1,10 +1,12 @@
 ﻿<div class="mb-3">
     <label for="ingredients" class="form-label">Ingredients</label>
-    <InputTextArea id="ingredients" class="form-control" rows="5" @bind-Value="@Ingredients" />
+    <InputTextArea id="ingredients" class="form-control" rows="5" @bind-Value="Value" />
 </div>
 
 @code {
     [Parameter]
-    public string Ingredients { get; set; } = string.Empty;
+    public string Value { get; set; } = string.Empty;
 
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
 }

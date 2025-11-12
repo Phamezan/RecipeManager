@@ -1,9 +1,12 @@
 ﻿<div class="mb-3">
     <label for="prepTime" class="form-label">Preparation Time </label>
-    <InputText id="prepTime" class="form-control" @bind-Value="@PrepTime" />
+    <InputText id="prepTime" class="form-control" @bind-Value="Value" />
 </div>
 
 @code {
     [Parameter]
-    public string PrepTime { get; set; } = string.Empty;
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
 }

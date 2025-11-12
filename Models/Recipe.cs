@@ -6,9 +6,9 @@ namespace RecipeManager.Models;
 public class Recipe
 {
     public int RecipeId { get; set; }
-    [Required]
+    [Required(ErrorMessage = "Name is required")]
     public string Name { get; set; } = string.Empty;
-    [Required]
+    [Required(ErrorMessage = "PrepTime is required")]
     public string PrepTime { get; set; } = string.Empty;
     public int Servings { get; set; }
     public string? FilePath { get; set; }

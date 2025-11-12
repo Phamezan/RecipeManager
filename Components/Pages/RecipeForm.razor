@@ -10,34 +10,39 @@
 {
     <EditForm Model="recipe" enctype="multipart/form-data" FormName="EditRecipe" OnValidSubmit="Submit">
         <DataAnnotationsValidator />
-        <ValidationSummary />
 
         <div class="row">
             <div class="col-md-6">
-                <RecipeForm_Name recipeName="@recipe.Name" />
+                <RecipeForm_Name @bind-Value="recipe.Name" />
+                <ValidationMessage For="@(() => recipe.Name)" />
             </div>
             <div class="col-md-6">
-                <RecipeForm_Description Description="@recipe.Description" />
+                <RecipeForm_Description @bind-Value="recipe.Description" />
+                <ValidationMessage For="@(() => recipe.Description)" />
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-6">
-                <RecipeForm_Category Categories="@categories" CategoryId="@recipe.CategoryId" />
+                <RecipeForm_Category Categories="@categories" @bind-Value="recipe.CategoryId" />
             </div>
             <div class="col-md-6">
-                <RecipeForm_Instructions Instructions="@recipe.Instructions" />
+                <RecipeForm_Instructions @bind-Value="recipe.Instructions" />
+                <ValidationMessage For="@(() => recipe.Instructions)" />
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-6">
                 <div class="d-flex gap-3">
-                    <RecipeForm_PrepTime prepTime="@recipe.PrepTime" />
-                    <RecipeForm_Servings servings="@recipe.Servings" />
+                    <div>
+                        <RecipeForm_PrepTime @bind-Value="recipe.PrepTime" />
+                        <ValidationMessage For="@(() => recipe.PrepTime)" />
+                    </div>
+                    <RecipeForm_Servings @bind-Value="recipe.Servings" />
                 </div>
             </div>
             <div class="col-md-6">
-                <RecipeForm_Ingredients Ingredients="@recipe.Ingredients" />
+                <RecipeForm_Ingredients @bind-Value="recipe.Ingredients" />
             </div>
         </div>
 
@@ -50,7 +55,7 @@
 
         <div class="d-flex justify-content-start gap-3 mt-4">
             <a type="button" href="/recipes" class="btn btn-secondary">Cancel</a>
-            <button type="submit" class="btn btn-primary" @onclick="Submit">Save Recipe</button>
+            <button type="submit" class="btn btn-primary">Save Recipe</button>
         </div>
     </EditForm>
 }
@@ -58,34 +63,39 @@ else if (newRecipe != null)
 {
     <EditForm Model="newRecipe" FormName="AddRecipe">
         <DataAnnotationsValidator />
-        <ValidationSummary />
 
         <div class="row">
             <div class="col-md-6">
-                <RecipeForm_Name recipeName="@newRecipe.Name" />
+                <RecipeForm_Name @bind-Value="newRecipe.Name" />
+                <ValidationMessage For="@(() => newRecipe.Name)" />
             </div>
             <div class="col-md-6">
-                <RecipeForm_Description Description="@newRecipe.Description" />
+                <RecipeForm_Description @bind-Value="newRecipe.Description" />
+                <ValidationMessage For="@(() => newRecipe.Description)" />
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-6">
-                <RecipeForm_Category Categories="@categories" />
+                <RecipeForm_Category Categories="@categories" @bind-Value="newRecipe.CategoryId" />
             </div>
             <div class="col-md-6">
-                <RecipeForm_Instructions Instructions="@newRecipe.Instructions" />
+                <RecipeForm_Instructions @bind-Value="newRecipe.Instructions" />
+                <ValidationMessage For="@(() => newRecipe.Instructions)" />
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-6">
                 <div class="d-flex gap-3">
-                    <RecipeForm_PrepTime prepTime="@newRecipe.PrepTime" />
-                    <RecipeForm_Servings servings="@newRecipe.Servings" />
+                    <div>
+                        <RecipeForm_PrepTime @bind-Value="newRecipe.PrepTime" />
+                        <ValidationMessage For="@(() => newRecipe.PrepTime)" />
+                    </div>
+                    <RecipeForm_Servings @bind-Value="newRecipe.Servings" />
                 </div>
             </div>
             <div class="col-md-6">
-                <RecipeForm_Ingredients Ingredients="@newRecipe.Ingredients" />
+                <RecipeForm_Ingredients @bind-Value="newRecipe.Ingredients" />
             </div>
         </div>
 
@@ -99,7 +109,7 @@ else if (newRecipe != null)
 
         <div class="d-flex justify-content-start gap-3 mt-4">
             <a type="button" href="/recipes" class="btn btn-secondary">Cancel</a>
-            <button type="submit" class="btn btn-primary" @onclick="Submit">Add Recipe</button>
+            <button type="submit" class="btn btn-primary">Add Recipe</button>
         </div>
     </EditForm>
 }
@@ -110,9 +120,7 @@ else
 
 
 @code {
-    [SupplyParameterFromForm(FormName = "EditRecipe")]
     private Recipe? recipe { get; set; }
-    [SupplyParameterFromForm(FormName = "AddRecipe")]
     private Recipe? newRecipe { get; set; } = new Recipe();
 
     [Parameter]
@@ -127,7 +135,7 @@ else
     }
 
     //ImageUpload
-    private IBrowserFile file;
+    private IBrowserFile? file;
 
     private void HandleFile(IBrowserFile selectedFile)
     {

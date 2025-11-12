@@ -1,9 +1,12 @@
 ﻿<div class="mb-3">
     <label for="name" class="form-label">Recipe Name</label>
-    <InputText id="name" class="form-control" @bind-Value="@recipeName" />
+    <InputText id="name" class="form-control" @bind-Value="Value" />
 </div>
 
 @code {
     [Parameter]
-    public string recipeName { get; set; } = string.Empty;
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
 }
