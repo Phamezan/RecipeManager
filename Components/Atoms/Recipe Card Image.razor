@@ -1,6 +1,7 @@
-﻿<img src="@ImageUrl" />
+﻿<img src="@ImageUrl"
+    alt="Recipe image" class="img-fluid" style="object-fit: cover; height: 200px; width: 100%;" />
 
 @code {
     [Parameter]
-    public string ImageUrl { get; set; } = string.Empty;
+    public string? ImageUrl { get; set; }
 }

@@ -1,12 +1,14 @@
-﻿<div class="mb-3">
+﻿@inherits InputBase<string>
+<div class="mb-3">
     <label for="description" class="form-label">Recipe Description</label>
-    <InputTextArea id="description" class="form-control" @bind-Value="Value" rows="4" />
+    <InputTextArea id="description" class="form-control" @bind-Value="CurrentValue" rows="4" />
 </div>
 
 @code {
-    [Parameter]
-    public string Value { get; set; } = string.Empty;
-
-    [Parameter]
-    public EventCallback<string> ValueChanged { get; set; }
+    protected override bool TryParseValueFromString(string? value, out string result, out string? validationErrorMessage)
+    {
+        result = value ?? "";
+        validationErrorMessage = null;
+        return true;
+    }
 }

@@ -1,6 +1,7 @@
-﻿<div class="mb-3">
+﻿@inherits InputBase<int>
+<div class="mb-3">
     <label for="category" class="form-label">Recipe Category</label>
-    <InputSelect id="category" class="form-select" @bind-Value="Value">
+    <InputSelect id="category" class="form-select" @bind-Value="CurrentValue">
         @if (Categories != null)
         {
             <option value="">Select a category</option>
@@ -15,9 +16,18 @@
 @code {
     [Parameter]
     public List<Category>? Categories { get; set; }
-    [Parameter]
-    public int Value { get; set; }
-
-    [Parameter]
-    public EventCallback<int> ValueChanged { get; set; }
+    protected override bool TryParseValueFromString(string? value, out int result, out string? validationErrorMessage)
+    {
+        if (int.TryParse(value, out result))
+        {
+            validationErrorMessage = null;
+            return true;
+        }
+        else
+        {
+            result = 0;
+            validationErrorMessage = "Please enter a valid integer.";
+            return false;
+        }
+    }
 }

@@ -46,11 +46,14 @@
             </div>
         </div>
 
-
         <div class="row">
+
             <div class="col-md-6">
-                <RecipeForm_Image />
+
+                <RecipeForm_Image OnFileSelected="HandleFileSelected" />
+
             </div>
+
         </div>
 
         <div class="d-flex justify-content-start gap-3 mt-4">
@@ -61,7 +64,7 @@
 }
 else if (newRecipe != null)
 {
-    <EditForm Model="newRecipe" FormName="AddRecipe">
+    <EditForm Model="newRecipe" enctype="multipart/form-data" FormName="AddRecipe" OnValidSubmit="Submit">
         <DataAnnotationsValidator />
 
         <div class="row">
@@ -102,7 +105,7 @@ else if (newRecipe != null)
 
         <div class="row">
             <div class="col-md-6">
-                <RecipeForm_Image />
+                <RecipeForm_Image OnFileSelected="HandleFileSelected" />
             </div>
         </div>
 
@@ -118,7 +121,6 @@ else
     <p>Loading...</p>
 }
 
-
 @code {
     private Recipe? recipe { get; set; }
     private Recipe? newRecipe { get; set; } = new Recipe();
@@ -128,34 +130,51 @@ else
 
     private List<Category>? categories;
 
+    private IBrowserFile? selectedFile = null;
+
+    private void HandleFileSelected(IBrowserFile file) => selectedFile = file;
+
     protected override void OnParametersSet()
     {
         recipe ??= recipeRepo.GetRecipeById(RecipeId ?? 0);
         categories = categoryRepo.GetAllCategories();
     }
 
-    //ImageUpload
-    private IBrowserFile? file;
-
-    private void HandleFile(IBrowserFile selectedFile)
-    {
-        file = selectedFile;
-    }
 
     private async Task Submit()
     {
-        if (file != null)
+        if (selectedFile != null)
         {
-            var folderPath = Path.Combine(WebHostEnv.WebRootPath, "uploads");
+            var folderPath = Path.Combine(WebHostEnv.WebRootPath, "images");
             Directory.CreateDirectory(folderPath);
-
-            var filePath = Path.Combine(folderPath, file.Name);
-            using var stream = file.OpenReadStream(maxAllowedSize: 10_000_000);
-            using var fs = new FileStream(filePath, FileMode.Create);
-            await stream.CopyToAsync(fs);
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(selectedFile.Name)}";
+            var filePath = Path.Combine(folderPath, fileName);
+            await using var stream = new FileStream(filePath, FileMode.Create);
+            await selectedFile.OpenReadStream(maxAllowedSize: 1024 * 1024 * 10).CopyToAsync(stream);
+            if (recipe != null)
+            {
+                if (!string.IsNullOrEmpty(recipe.FilePath))
+                {
+                    var oldPath = Path.Combine(WebHostEnv.WebRootPath, recipe.FilePath.TrimStart('/'));
+                    if (File.Exists(oldPath))
+                    {
+                        File.Delete(oldPath);
+                    }
+                }
+                recipe.FilePath = $"/images/{fileName}";
+            }
+            else if (newRecipe != null)
+            {
+                newRecipe.FilePath = $"/images/{fileName}";
+            }
+        }
+        else if (newRecipe != null)
+        {
+            newRecipe.FilePath = string.Empty;
         }
         if (recipe != null)
         {
+
             recipeRepo.UpdateRecipe(recipe);
         }
         else if (newRecipe != null)
@@ -164,5 +183,4 @@ else
         }
         manager.NavigateTo("/recipes");
     }
-
 }

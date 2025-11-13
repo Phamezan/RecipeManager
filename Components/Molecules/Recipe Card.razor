@@ -1,5 +1,5 @@
 ﻿<div class="card w-100 h-100">
-    <div class="card-img-top">
+    <div class="card-img-top overflow-hidden">
         <Recipe_Card_Image ImageUrl="@ImageUrl" />
     </div>
 
@@ -16,7 +16,7 @@
 
 @code {
     [Parameter]
-    public string ImageUrl { get; set; } = string.Empty;
+    public string? ImageUrl { get; set; }
 
     [Parameter]
     public string RecipeTitle { get; set; } = string.Empty;

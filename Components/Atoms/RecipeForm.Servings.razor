@@ -1,12 +1,22 @@
-﻿<div class="mb-3">
+﻿@inherits InputBase<int>
+<div class="mb-3">
     <label for="servings" class="form-label">Number of Servings</label>
-    <InputNumber id="servings" class="form-control" @bind-Value="Value" />
+    <InputNumber id="servings" class="form-control" @bind-Value="CurrentValue" />
 </div>
 
 @code {
-    [Parameter]
-    public int Value { get; set; }
-
-    [Parameter]
-    public EventCallback<int> ValueChanged { get; set; }
+    protected override bool TryParseValueFromString(string? value, out int result, out string? validationErrorMessage)
+    {
+        if (int.TryParse(value, out result))
+        {
+            validationErrorMessage = null;
+            return true;
+        }
+        else
+        {
+            result = 0; // Default value on failure
+            validationErrorMessage = "Please enter a valid integer.";
+            return false;
+        }
+    }
 }
