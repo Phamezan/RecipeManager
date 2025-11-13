@@ -21,13 +21,13 @@ namespace RecipeManager.Persistence
             _context.SaveChanges();
         }
 
-        public void DeleteRecipe(int id)
+        public async Task DeleteRecipe(int id)
         {
-            var recipe = _context.Recipes.Find(id);
+            var recipe = await _context.Recipes.FindAsync(id);
             if (recipe != null)
             {
                 _context.Recipes.Remove(recipe);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 

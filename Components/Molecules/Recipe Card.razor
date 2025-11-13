@@ -9,7 +9,7 @@
     </div>
 
     <div class="card-footer">
-        <Recipe_Card_Footer PrepTime="@PrepTime" RecipeId="@RecipeId" />
+        <Recipe_Card_Footer PrepTime="@PrepTime" RecipeId="@RecipeId" OnDelete="ForwardDelete" />
     </div>
 </div>
 
@@ -28,4 +28,11 @@
     public string PrepTime { get; set; } = string.Empty;
     [Parameter]
     public int RecipeId { get; set; }
+    [Parameter] 
+    public EventCallback<int> DeleteRequested { get; set; }
+    private async Task ForwardDelete(int recipeId)
+    {
+        await DeleteRequested.InvokeAsync(recipeId);
+    }
+
 }

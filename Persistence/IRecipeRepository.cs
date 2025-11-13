@@ -12,7 +12,7 @@ namespace RecipeManager.Persistence
         Recipe GetRecipeById(int id);
         List<Recipe> GetAllRecipes();
         void UpdateRecipe(Recipe recipe);
-        void DeleteRecipe(int id);
+        Task DeleteRecipe(int id);
 
     }
 }

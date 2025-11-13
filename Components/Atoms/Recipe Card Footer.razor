@@ -3,7 +3,8 @@
     <div class="d-flex">
         <span><a href="/recipes/@RecipeId"><i class="bi bi-eye-fill"></i></a></span>
         <span><a href="/recipes-edit/@RecipeId"><i class="bi bi-pencil-square" style="color:green;"></i></a></span>
-        <span><a href="/recipes-delete/@RecipeId"><i class="bi bi-trash2-fill" style="color:red;"></i></a></span>
+        <button type="button" class="border-0" @onclick="OnDeleteClicked"><i class="bi bi-trash2-fill"
+                style="color:red;"></i></button>
     </div>
 </div>
 
@@ -12,4 +13,11 @@
     public string PrepTime { get; set; } = string.Empty;
     [Parameter]
     public int RecipeId { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnDelete { get; set; }
+    private async Task OnDeleteClicked(MouseEventArgs args)
+    {
+        await OnDelete.InvokeAsync(RecipeId);
+    }
 }
